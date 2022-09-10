@@ -14,6 +14,7 @@ import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.mod.fabric.FabricDummyParentMod;
 import io.github.prospector.modmenu.util.mod.fabric.FabricMod;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.EntrypointException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -74,15 +76,30 @@ public class ModMenu implements ClientModInitializer {
 		// find all entrypoints
 		List<EntrypointContainer<ModMenuApi>> entrypoints = FabricLoader.getInstance().getEntrypointContainers( "modmenu", ModMenuApi.class );
 
+		// filter invalid entrypoints
+		entrypoints = entrypoints.stream().filter( container -> {
+			try {
+				container.getEntrypoint();
+				return true;
+			} catch ( Throwable exc ) {
+				LOGGER.error(
+					"Mod '{}' provides broken entrypoint: ",
+					container.getProvider().getMetadata().getId(),
+					exc
+				);
+			}
+			return false;
+		} ).collect( Collectors.toList());
+
 		// badges should be loaded first, as the other things depend on them
 		entrypoints.forEach( entrypoint -> {
 			try {
 				entrypoint.getEntrypoint().onSetupBadges();
-			} catch ( Throwable err ) {
+			} catch ( Throwable exc ) {
 				LOGGER.error(
 					"Failed to setup badges from mod '{}': ",
 					entrypoint.getProvider().getMetadata().getId(),
-					err
+					exc
 				);
 			}
 		} );
