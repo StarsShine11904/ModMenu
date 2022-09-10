@@ -3,11 +3,13 @@ package io.github.prospector.modmenu.gui;
 import com.google.common.base.Joiner;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.api.Badge;
 import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.gui.widget.*;
 import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
+import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.DrawingUtil;
 import io.github.prospector.modmenu.util.ScreenTexts;
 import io.github.prospector.modmenu.util.TranslationUtil;
@@ -395,7 +397,7 @@ public class ModsScreen extends AbstractScreen {
 				init = false;
 			}
 			if ( !ModMenuConfig.HIDE_BADGES.getValue() ) {
-				modBadgeRenderer.draw( mouseX, mouseY );
+				modBadgeRenderer.draw();
 			}
 			if ( mod.isReal() ) {
 				textRenderer.draw( mod.getPrefixedVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080 );
@@ -429,10 +431,10 @@ public class ModsScreen extends AbstractScreen {
 	}
 
 	private Text computeModCountText( boolean includeLibs ) {
-		int[] rootMods = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> !mod.getBadges().contains( Mod.Badge.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
+		int[] rootMods = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> !mod.getBadges().contains( BuiltinBadges.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
 
 		if ( includeLibs && ModMenuConfig.SHOW_LIBRARIES.getValue() ) {
-			int[] rootLibs = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> mod.getBadges().contains( Mod.Badge.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
+			int[] rootLibs = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> mod.getBadges().contains( BuiltinBadges.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
 			return TranslationUtil.translateNumeric( "modmenu.showingModsLibraries", rootMods, rootLibs );
 		} else {
 			return TranslationUtil.translateNumeric( "modmenu.showingMods", rootMods );
@@ -441,7 +443,7 @@ public class ModsScreen extends AbstractScreen {
 
 	private Text computeLibraryCountText() {
 		if ( ModMenuConfig.SHOW_LIBRARIES.getValue() ) {
-			int[] rootLibs = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> mod.getBadges().contains( Mod.Badge.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
+			int[] rootLibs = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> mod.getBadges().contains( BuiltinBadges.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
 			return TranslationUtil.translateNumeric( "modmenu.showingLibraries", rootLibs );
 		} else {
 			return new LiteralText( null );

@@ -76,7 +76,8 @@ public interface ModMenuApi {
 	}
 
 	/**
-	 * Called before mod list initialization to find all possible badges
+	 * Called before mod list initialization to find all possible badges.<br/>
+	 * Prefer using this instead of a static { } block.
 	 */
 	default void onSetupBadges() {
 	}

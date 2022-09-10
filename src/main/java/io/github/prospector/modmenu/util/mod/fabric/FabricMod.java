@@ -3,7 +3,9 @@ package io.github.prospector.modmenu.util.mod.fabric;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.api.Badge;
 import io.github.prospector.modmenu.api.Mod;
+import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.OptionalUtil;
 import io.github.prospector.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
@@ -86,7 +88,7 @@ public class FabricMod implements Mod {
 			} else {
 				modMenuData.fillParentIfEmpty( "fabric" );
 			}
-			modMenuData.badges.add( Badge.LIBRARY );
+			modMenuData.badges.add( BuiltinBadges.LIBRARY );
 		}
 		if (
 			id.contains( "fabric" ) && (
@@ -97,21 +99,21 @@ public class FabricMod implements Mod {
 					metadata.getProvides().contains( "fabric" ) ||
 					metadata.getProvides().contains( "legacy-fabric-api" )
 			)
-		) modMenuData.badges.add( Badge.LIBRARY );
+		) modMenuData.badges.add( BuiltinBadges.LIBRARY );
 
 		/* Add additional badges */
 		this.badges = modMenuData.badges;
 		if ( this.metadata.getEnvironment() == ModEnvironment.CLIENT ) {
-			badges.add( Badge.CLIENT );
+			badges.add( BuiltinBadges.CLIENT );
 		}
 		if ( OptionalUtil.isPresentAndTrue( CustomValueUtil.getBoolean( "fabric-loom:generated", metadata ) ) || "java".equals( id ) ) {
-			badges.add( Badge.LIBRARY );
+			badges.add( BuiltinBadges.LIBRARY );
 		}
 		if ( "deprecated".equals( CustomValueUtil.getString( "fabric-api:module-lifecycle", metadata ).orElse( null ) ) ) {
-			badges.add( Badge.DEPRECATED );
+			badges.add( BuiltinBadges.DEPRECATED );
 		}
 		if ( "minecraft".equals( getId() ) ) {
-			badges.add( Badge.MINECRAFT );
+			badges.add( BuiltinBadges.MINECRAFT );
 		}
 	}
 
@@ -304,14 +306,6 @@ public class FabricMod implements Mod {
 
 		public @Nullable DummyParentData getDummyParentData() {
 			return dummyParentData;
-		}
-
-		public void addClientBadge() {
-			badges.add( Badge.CLIENT );
-		}
-
-		public void addLibraryBadge() {
-			badges.add( Badge.LIBRARY );
 		}
 
 		public void fillParentIfEmpty( String parent ) {

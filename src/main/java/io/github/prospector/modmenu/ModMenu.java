@@ -10,6 +10,7 @@ import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
+import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.mod.fabric.FabricDummyParentMod;
 import io.github.prospector.modmenu.util.mod.fabric.FabricMod;
 import net.fabricmc.api.ClientModInitializer;
@@ -26,7 +27,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ModMenu implements ClientModInitializer {
@@ -69,6 +73,7 @@ public class ModMenu implements ClientModInitializer {
 		Map<String, String> additionalParents = new HashMap<>();
 		// find all entrypoints
 		List<EntrypointContainer<ModMenuApi>> entrypoints = FabricLoader.getInstance().getEntrypointContainers( "modmenu", ModMenuApi.class );
+
 		// badges should be loaded first, as the other things depend on them
 		entrypoints.forEach( entrypoint -> {
 			try {
@@ -81,6 +86,7 @@ public class ModMenu implements ClientModInitializer {
 				);
 			}
 		} );
+
 		// load everything else
 		entrypoints.forEach( entrypoint -> {
 			ModMetadata meta = entrypoint.getProvider().getMetadata();
@@ -155,7 +161,7 @@ public class ModMenu implements ClientModInitializer {
 			cachedDisplayedModCount = Math.toIntExact(
 				MODS.values().stream().filter( mod ->
 					( ModMenuConfig.COUNT_CHILDREN.getValue() || mod.getParent() == null ) &&
-						( ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains( Mod.Badge.LIBRARY ) ) &&
+						( ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains( BuiltinBadges.LIBRARY ) ) &&
 						( ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !ModMenuConfig.HIDDEN_MODS.getValue().contains( mod.getId() ) )
 				).count()
 			);

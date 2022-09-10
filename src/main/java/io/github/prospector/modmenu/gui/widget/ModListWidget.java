@@ -1,6 +1,7 @@
 package io.github.prospector.modmenu.gui.widget;
 
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.api.Badge;
 import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.gui.ModsScreen;
@@ -8,6 +9,7 @@ import io.github.prospector.modmenu.gui.widget.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.widget.entries.IndependentEntry;
 import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
 import io.github.prospector.modmenu.gui.widget.entries.ParentEntry;
+import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.mod.ModIconHandler;
 import io.github.prospector.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
@@ -119,7 +121,7 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 			String modId = mod.getId();
 
 			// Hide parent lib mods when not searching, and the config is set to hide
-			if ( mod.getBadges().contains( Mod.Badge.LIBRARY ) && !ModMenuConfig.SHOW_LIBRARIES.getValue() )
+			if ( mod.getBadges().contains( BuiltinBadges.LIBRARY ) && !ModMenuConfig.SHOW_LIBRARIES.getValue() )
 				continue;
 
 			// only add parent and independent mods to the list, childs are handled by the parent itself

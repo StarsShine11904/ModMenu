@@ -1,7 +1,9 @@
 package io.github.prospector.modmenu.util.mod.fabric;
 
 import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.api.Badge;
 import io.github.prospector.modmenu.api.Mod;
+import io.github.prospector.modmenu.util.BuiltinBadges;
 import io.github.prospector.modmenu.util.mod.ModIconHandler;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -104,7 +106,7 @@ public class FabricDummyParentMod implements Mod {
 		}
 		Set<Badge> badges = new HashSet<>();
 		if ( id.equals( "fabric" ) || id.equals( "legacy-fabric-api" ) ) {
-			badges.add( Badge.LIBRARY );
+			badges.add( BuiltinBadges.LIBRARY );
 		}
 		return badges;
 	}

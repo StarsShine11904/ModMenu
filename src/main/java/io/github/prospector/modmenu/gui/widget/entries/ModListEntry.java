@@ -14,12 +14,9 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = new Identifier( "textures/misc/unknown_pack.png" );
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	protected final MinecraftClient client;
 	protected final Mod mod;
@@ -36,9 +33,7 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 
 	// updatePosition()
 	@Override
-	public void method_9473( int index, int x, int y, float tickDelta ) {
-		// NO-OP
-	}
+	public void method_9473( int index, int x, int y, float tickDelta ) { }
 
 	@Override
 	public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
@@ -67,7 +62,7 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 
 		font.draw( trimmedName, x + iconSize + 3, y + 1, 0xFFFFFF );
 		if ( !ModMenuConfig.HIDE_BADGES.getValue() )
-			new ModBadgeRenderer( x + iconSize + 3 + font.getStringWidth( name ) + 2, y, x + rowWidth, mod, list.getParent() ).draw( mouseX, mouseY );
+			new ModBadgeRenderer( x + iconSize + 3 + font.getStringWidth( name ) + 2, y, x + rowWidth, mod, list.getParent() ).draw();
 		if ( !ModMenuConfig.COMPACT_LIST.getValue() ) {
 			String summary = mod.getSummary();
 			String translatableSummaryKey = "modmenu.summaryTranslation." + mod.getId();

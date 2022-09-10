@@ -11,7 +11,7 @@
       "io.github.prospector.modmenu.ModMenu"
     ],
     "modmenu": [
-      "io.github.prospector.modmenu.ModMenuModMenuCompat"
+      "io.github.prospector.modmenu.ModMenuApiEntrypoint"
     ]
   },
   "contact": {
