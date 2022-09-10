@@ -59,7 +59,8 @@ public interface ModMenuApi {
 	}
 
 	/**
-	 * Used to provide additional mods to the mods menu
+	 * Used to provide additional mods to the mods menu.<br>
+	 * This is called before {@link ModMenuApi#getAdditionalParents()}.
 	 *
 	 * @return a collection of {@link Mod} objects
 	 */
