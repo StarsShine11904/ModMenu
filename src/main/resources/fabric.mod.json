@@ -87,7 +87,7 @@
     "mixins.modmenu.json"
   ],
   "depends": {
-    "legacy-fabric-api": "*",
+    "legacy-fabric-resource-loader-v1": "*",
     "minecraft": "${minecraft_version}"
   }
 }
