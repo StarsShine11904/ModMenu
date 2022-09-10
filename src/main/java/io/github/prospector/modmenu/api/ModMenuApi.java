@@ -5,6 +5,7 @@ import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.gui.ModsScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,7 +19,7 @@ public interface ModMenuApi {
 	 * @param previous The screen before opening
 	 * @return A "Mods" Screen
 	 */
-	static Screen createModsScreen( Screen previous ) {
+	static @NotNull Screen createModsScreen( Screen previous ) {
 		return new ModsScreen( previous );
 	}
 
@@ -28,7 +29,7 @@ public interface ModMenuApi {
 	 *
 	 * @return The text that would be displayed on a Mods button
 	 */
-	static Text createModsButtonText() {
+	static @NotNull Text createModsButtonText() {
 		return ModMenu.createModsButtonText();
 	}
 
@@ -39,7 +40,7 @@ public interface ModMenuApi {
 	 *
 	 * @return A factory for constructing config screen instances.
 	 */
-	default ConfigScreenFactory<?> getModConfigScreenFactory() {
+	default @NotNull ConfigScreenFactory<?> getModConfigScreenFactory() {
 		return screen -> null;
 	}
 
@@ -53,7 +54,7 @@ public interface ModMenuApi {
 	 *
 	 * @return a map of mod ids to screen factories.
 	 */
-	default Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+	default @NotNull Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		return ImmutableMap.of();
 	}
 
@@ -62,7 +63,7 @@ public interface ModMenuApi {
 	 *
 	 * @return a collection of {@link Mod} objects
 	 */
-	default Collection<Mod> getAdditionalMods() {
+	default @NotNull Collection<Mod> getAdditionalMods() {
 		return Collections.emptyList();
 	}
 
@@ -71,7 +72,7 @@ public interface ModMenuApi {
 	 *
 	 * @return a {@link Map} of child id-parent id keyvalues
 	 */
-	default Map<String, String> getAdditionalParents() {
+	default @NotNull Map<String, String> getAdditionalParents() {
 		return Collections.emptyMap();
 	}
 

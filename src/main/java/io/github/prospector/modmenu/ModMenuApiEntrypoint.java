@@ -7,18 +7,19 @@ import io.github.prospector.modmenu.gui.ModMenuOptionsScreen;
 import io.github.prospector.modmenu.util.BuiltinBadges;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.SettingsScreen;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
 public class ModMenuApiEntrypoint implements ModMenuApi {
 
 	@Override
-	public ConfigScreenFactory<?> getModConfigScreenFactory() {
+	public @NotNull ConfigScreenFactory<?> getModConfigScreenFactory() {
 		return ModMenuOptionsScreen::new;
 	}
 
 	@Override
-	public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
+	public @NotNull Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		return ImmutableMap.of(
 			"minecraft", parent -> new SettingsScreen( parent, MinecraftClient.getInstance().options )
 		);
