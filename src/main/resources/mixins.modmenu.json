@@ -1,16 +1,14 @@
 {
   "required": true,
-  "package": "io.github.prospector.modmenu.mixin",
+  "package": "com.enderzombi102.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinTitleScreen"
+	  "MixinTitleScreen",
+      "ButtonWidgetMixin",
+      "ScreenMixin",
+      "TextRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "ButtonWidgetMixin",
-    "ScreenMixin",
-    "TextRendererAccessor"
-  ]
+  }
 }

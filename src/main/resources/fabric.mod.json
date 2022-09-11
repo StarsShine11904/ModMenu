@@ -8,10 +8,10 @@
   "icon": "assets/modmenu/icons/icon.png",
   "entrypoints": {
     "client": [
-      "io.github.prospector.modmenu.ModMenu"
+      "com.enderzombi102.modmenu.ModMenu"
     ],
     "modmenu": [
-      "io.github.prospector.modmenu.ModMenuApiEntrypoint"
+      "com.enderzombi102.modmenu.ModMenuApiEntrypoint"
     ]
   },
   "contact": {
@@ -20,11 +20,10 @@
     "issues": "https://github.com/BoogieMonster1O1/ModMenu/issues"
   },
   "authors": [
-    "Prospector",
-    "ENDERZOMBI102"
+    "ENDERZOMBI102",
+    "Prospector"
   ],
   "contributors": [
-    "ENDERZOMBI102",
     "shedaniel",
     "Draylar",
     "Mordna",
