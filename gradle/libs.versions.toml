@@ -1,0 +1,12 @@
+[versions]
+	loader = '0.13.3'
+	annotations = '23.0.0'
+	guava = '23.5-jre'
+	enderlib = '0.3.2-SNAPSHOT'
+
+
+[libraries]
+	loader = { module = 'net.fabricmc:fabric-loader', version.ref = 'loader' }
+	annotations = { module = 'org.jetbrains:annotations', version.ref = 'annotations' }
+	guava = { module = 'com.google.guava:guava', version.ref = 'guava' }
+	enderlib = { module = 'com.enderzombi102.EnderLib:jvm8', version.ref = 'enderlib' }
