@@ -27,7 +27,6 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,9 +39,6 @@ import java.util.stream.Collectors;
 public class ModsScreen extends AbstractScreen {
 	private static final Identifier FILTERS_BUTTON_LOCATION = new Identifier( ModMenu.MOD_ID, "textures/gui/filters_button.png" );
 	private static final Identifier CONFIGURE_BUTTON_LOCATION = new Identifier( ModMenu.MOD_ID, "textures/gui/configure_button.png" );
-
-	private static final TranslatableText TOGGLE_FILTER_OPTIONS = new TranslatableText( "modmenu.toggleFilterOptions" );
-	private static final TranslatableText CONFIGURE = new TranslatableText( "modmenu.configure" );
 
 	private static final Logger LOGGER = LogManager.getLogger( "Mod Menu" );
 
@@ -164,7 +160,7 @@ public class ModsScreen extends AbstractScreen {
 					button.active = false;
 				}
 			},
-			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( CONFIGURE )
+			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( new LiteralText( I18n.translate( "modmenu.configure" ) ) )
 		) {
 			@Override
 			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
@@ -186,7 +182,7 @@ public class ModsScreen extends AbstractScreen {
 			paneY + 36,
 			Math.min( urlButtonWidths, 200 ),
 			20,
-			new TranslatableText( "modmenu.website" ),
+			new LiteralText( I18n.translate( "modmenu.website" ) ),
 			button -> openLink( Mod::getWebsite )
 		) {
 			@Override
@@ -202,7 +198,7 @@ public class ModsScreen extends AbstractScreen {
 			paneY + 36,
 			Math.min( urlButtonWidths, 200 ),
 			20,
-			new TranslatableText( "modmenu.issues" ),
+			new LiteralText( I18n.translate( "modmenu.issues" ) ),
 			button -> openLink( Mod::getIssueTracker )
 		) {
 
@@ -228,7 +224,7 @@ public class ModsScreen extends AbstractScreen {
 			64,
 			"",
 			button -> filterOptionsShown = !filterOptionsShown,
-			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( TOGGLE_FILTER_OPTIONS )
+			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( new LiteralText( I18n.translate( "modmenu.toggleFilterOptions" ) ) )
 		) );
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
@@ -304,7 +300,7 @@ public class ModsScreen extends AbstractScreen {
 			this.height - 28,
 			150,
 			20,
-			new TranslatableText( "modmenu.modsFolder" ),
+			new LiteralText( I18n.translate( "modmenu.modsFolder" ) ),
 			button -> UrlUtil.getOperatingSystem().open( new File( FabricLoader.getInstance().getGameDir().toFile(), "mods" ) )
 		) );
 		this.method_13411( new AbstractButtonWidget(
@@ -387,7 +383,7 @@ public class ModsScreen extends AbstractScreen {
 			}
 			textRenderer.draw( trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF );
 			if ( mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth( trimmedName ) ) {
-				setTooltip( new TranslatableText( "modmenu.modIdToolTip", mod.getId() ) );
+				setTooltip( new LiteralText( I18n.translate( "modmenu.modIdToolTip", mod.getId() ) ) );
 			}
 			if ( init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod ) {
 				modBadgeRenderer = new ModBadgeRenderer( x + imageOffset + this.client.textRenderer.getStringWidth( trimmedName ) + 2, paneY, width - 28, selectedEntry.getMod(), this );
@@ -443,7 +439,7 @@ public class ModsScreen extends AbstractScreen {
 			int[] rootLibs = formatModCount( ModMenu.ROOT_MODS.values().stream().filter( mod -> mod.getBadges().contains( BuiltinBadges.LIBRARY ) ).map( Mod::getId ).collect( Collectors.toSet() ) );
 			return TranslationUtil.translateNumeric( "modmenu.showingLibraries", rootLibs );
 		} else {
-			return new LiteralText( null );
+			return new LiteralText( "" );
 		}
 	}
 
