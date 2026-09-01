@@ -318,7 +318,15 @@ public class ModsScreen extends AbstractScreen {
 
 	@Override
 	public void keyPressed( char chr, int keyCode ) {
+		// Handle ESC explicitly so the player can close the ModsScreen with ESC
+		if ( keyCode == 1 ) {
+			this.client.openScreen( this.getPreviousScreen() );
+			return;
+		}
+
+		// Let the search box handle text input first, then fall back to default handling
 		this.searchBox.keyPressed( chr, keyCode );
+		super.keyPressed( chr, keyCode );
 	}
 
 	@Override
