@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -33,45 +34,47 @@ public class ModMenuConfigManager {
 			if ( !file.exists() )
 				save();
 			if ( file.exists() ) {
-				BufferedReader br = new BufferedReader( new FileReader( file ) );
-				JsonObject json = new JsonParser().parse( br ).getAsJsonObject();
+				// 使用 InputStreamReader 並明確指定 UTF-8 編碼
+				try ( BufferedReader br = new BufferedReader( new InputStreamReader( new FileInputStream( file ), StandardCharsets.UTF_8 ) ) ) {
+					JsonObject json = new JsonParser().parse( br ).getAsJsonObject();
 
-				for ( Field field : ModMenuConfig.class.getDeclaredFields() ) {
-					if ( Modifier.isStatic( field.getModifiers() ) && Modifier.isFinal( field.getModifiers() ) ) {
-						if ( StringSetConfigOption.class.isAssignableFrom( field.getType() ) ) {
-							JsonArray jsonArray = json.getAsJsonArray( field.getName().toLowerCase( Locale.ROOT ) );
-							if ( jsonArray != null ) {
-								StringSetConfigOption option = (StringSetConfigOption) field.get( null );
-								ConfigOptionStorage.setStringSet( option.getKey(), Sets.newHashSet( jsonArray ).stream().map( JsonElement::getAsString ).collect( Collectors.toSet() ) );
-							}
-						} else if ( BooleanConfigOption.class.isAssignableFrom( field.getType() ) ) {
-							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive( field.getName().toLowerCase( Locale.ROOT ) );
-							if ( jsonPrimitive != null && jsonPrimitive.isBoolean() ) {
-								BooleanConfigOption option = (BooleanConfigOption) field.get( null );
-								ConfigOptionStorage.setBoolean( option.getKey(), jsonPrimitive.getAsBoolean() );
-							}
-						} else if ( EnumConfigOption.class.isAssignableFrom( field.getType() ) && field.getGenericType() instanceof ParameterizedType ) {
-							JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive( field.getName().toLowerCase( Locale.ROOT ) );
-							if ( jsonPrimitive != null && jsonPrimitive.isString() ) {
-								Type generic = ( (ParameterizedType) field.getGenericType() ).getActualTypeArguments()[0];
-								if ( generic instanceof Class<?> ) {
-									EnumConfigOption<?> option = (EnumConfigOption<?>) field.get( null );
-									Enum<?> found = null;
-									for ( Enum<?> value : ( (Class<Enum<?>>) generic ).getEnumConstants() ) {
-										if ( value.name().toLowerCase( Locale.ROOT ).equals( jsonPrimitive.getAsString() ) ) {
-											found = value;
-											break;
+					for ( Field field : ModMenuConfig.class.getDeclaredFields() ) {
+						if ( Modifier.isStatic( field.getModifiers() ) && Modifier.isFinal( field.getModifiers() ) ) {
+							if ( StringSetConfigOption.class.isAssignableFrom( field.getType() ) ) {
+								JsonArray jsonArray = json.getAsJsonArray( field.getName().toLowerCase( Locale.ROOT ) );
+								if ( jsonArray != null ) {
+									StringSetConfigOption option = (StringSetConfigOption) field.get( null );
+									ConfigOptionStorage.setStringSet( option.getKey(), Sets.newHashSet( jsonArray ).stream().map( JsonElement::getAsString ).collect( Collectors.toSet() ) );
+								}
+							} else if ( BooleanConfigOption.class.isAssignableFrom( field.getType() ) ) {
+								JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive( field.getName().toLowerCase( Locale.ROOT ) );
+								if ( jsonPrimitive != null && jsonPrimitive.isBoolean() ) {
+									BooleanConfigOption option = (BooleanConfigOption) field.get( null );
+									ConfigOptionStorage.setBoolean( option.getKey(), jsonPrimitive.getAsBoolean() );
+								}
+							} else if ( EnumConfigOption.class.isAssignableFrom( field.getType() ) && field.getGenericType() instanceof ParameterizedType ) {
+								JsonPrimitive jsonPrimitive = json.getAsJsonPrimitive( field.getName().toLowerCase( Locale.ROOT ) );
+								if ( jsonPrimitive != null && jsonPrimitive.isString() ) {
+									Type generic = ( (ParameterizedType) field.getGenericType() ).getActualTypeArguments()[0];
+									if ( generic instanceof Class<?> ) {
+										EnumConfigOption<?> option = (EnumConfigOption<?>) field.get( null );
+										Enum<?> found = null;
+										for ( Enum<?> value : ( (Class<Enum<?>>) generic ).getEnumConstants() ) {
+											if ( value.name().toLowerCase( Locale.ROOT ).equals( jsonPrimitive.getAsString() ) ) {
+												found = value;
+												break;
+											}
 										}
+										if ( found != null )
+											ConfigOptionStorage.setEnumTypeless( option.getKey(), found );
 									}
-									if ( found != null )
-										ConfigOptionStorage.setEnumTypeless( option.getKey(), found );
 								}
 							}
 						}
 					}
 				}
 			}
-		} catch ( FileNotFoundException | IllegalAccessException e ) {
+		} catch ( IOException | IllegalAccessException e ) {
 			LOGGER.error( "Couldn't load Mod Menu configuration file; reverting to defaults", e );
 		}
 	}
@@ -113,8 +116,9 @@ public class ModMenuConfigManager {
 		//noinspection ResultOfMethodCallIgnored
 		file.getParentFile().mkdirs();
 
-		try ( FileWriter fileWriter = new FileWriter( file ) ) {
-			fileWriter.write( ModMenu.GSON.toJson( config ) );
+		// 使用 OutputStreamWriter 並明確指定 UTF-8 編碼
+		try ( Writer writer = new OutputStreamWriter( new FileOutputStream( file ), StandardCharsets.UTF_8 ) ) {
+			writer.write( ModMenu.GSON.toJson( config ) );
 		} catch ( IOException e ) {
 			LOGGER.error( "Couldn't save Mod Menu configuration file", e );
 		}
