@@ -5,6 +5,7 @@ import com.enderzombi102.modmenu.gui.widget.ModMenuButtonWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +27,12 @@ public class MixinGameMenuScreen {
 				200,
 				20,
 				new LiteralText( I18n.translate( "modmenu.title" ) ),
-				button -> MinecraftClient.getInstance().openScreen( new ModsScreen( screen ) )
+				new ButtonWidget.PressAction() {
+					@Override
+					public void onPress( ButtonWidget button ) {
+						MinecraftClient.getInstance().openScreen( new ModsScreen( screen ) );
+					}
+				}
 			)
 		);
 	}
