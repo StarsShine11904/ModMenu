@@ -18,14 +18,14 @@ public abstract class MixinGameMenuScreen extends Screen {
 	private void onInit(CallbackInfo ci) {
 		this.method_13411(
 			new ModMenuButtonWidget(
-				990,
-				this.width / 2 - 100,
-				this.height / 4 + 72 - 16,
-				200,
-				20,
-				new LiteralText( I18n.translate( "modmenu.title" ) ),
-				(button) -> this.client.openScreen( new ModsScreen( this ) )
-			)
-		);
+					990,
+					this.width / 2 - 100,
+					this.height / 4 + 72 - 16,
+					200,
+					20,
+					new LiteralText( I18n.translate( "modmenu.title" ) ),
+					this
+				)
+			);
 	}
 }
