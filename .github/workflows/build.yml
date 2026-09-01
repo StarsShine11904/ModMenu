@@ -1,0 +1,55 @@
+name: Build Mod Menu (Legacy Fabric)
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: '是否建立 GitHub Release'
+        required: true
+        type: boolean
+        default: false
+      release_tag:
+        description: 'Release 標籤名稱 (若要發布請填寫，例如 v1.0.0)'
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 8 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build --stacktrace
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ModMenu-LegacyFabric-Build
+          path: build/libs/*.jar
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: ${{ inputs.create_release && inputs.release_tag != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag }}
+          name: Mod Menu ${{ inputs.release_tag }}
+          files: build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
