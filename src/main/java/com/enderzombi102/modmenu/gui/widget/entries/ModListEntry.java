@@ -62,7 +62,7 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 
 		font.draw( trimmedName, x + iconSize + 3, y + 1, 0xFFFFFF );
 		if ( !ModMenuConfig.HIDE_BADGES.getValue() )
-			new ModBadgeRenderer( x + iconSize + 3 + font.getStringWidth( name ) + 2, y, x + rowWidth, mod, list.getParent() ).draw();
+			new ModBadgeRenderer( x + iconSize + 3 + font.getStringWidth( trimmedName ) + 2, y, x + rowWidth, mod, list.getParent() ).draw();
 		if ( !ModMenuConfig.COMPACT_LIST.getValue() ) {
 			String summary = mod.getSummary();
 			String translatableSummaryKey = "modmenu.summaryTranslation." + mod.getId();
@@ -71,6 +71,8 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 				summary = I18n.translate( translatableSummaryKey );
 			} else if ( I18n.method_12500( translatableDescriptionKey ) ) {
 				summary = I18n.translate( translatableDescriptionKey );
+			} else {
+				summary = I18n.translate( summary );
 			}
 			DrawingUtil.drawWrappedString( summary, ( x + iconSize + 3 + 4 ), ( y + client.textRenderer.fontHeight + 2 ), rowWidth - iconSize - 7, 2, 0x808080 );
 		} else {
