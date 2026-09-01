@@ -51,7 +51,7 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 
 	public void setSelected( ModListEntry entry ) {
 		super.setSelected( entry );
-		this.selectedModId = entry.getMod().getId();
+		this.selectedModId = entry != null ? entry.getMod().getId() : null;
 		this.parent.updateSelectedEntry( this.getSelectedOrNull() );
 	}
 
@@ -95,7 +95,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 		filter( parent.getSearchInput(), true );
 	}
 
-
 	public void filter( String searchTerm, boolean refresh ) {
 		this.clearEntries();
 		addedMods.clear();
@@ -127,7 +126,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 			if ( !ModMenu.PARENT_MAP.values().contains( mod ) ) {
 				if ( ModMenu.PARENT_MAP.keySet().contains( mod ) ) {
 					// A parent mod with children
-
 					List<Mod> children = ModMenu.PARENT_MAP.get( mod );
 					children.sort( ModMenuConfig.SORTING.getValue().getComparator() );
 					ParentEntry parent = new ParentEntry( mod, children, this );
@@ -187,7 +185,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 		return this.width - ( Math.max( 0, this.getMaxPosition() - ( this.yEnd - this.yStart - 4 ) ) > 0 ? 18 : 12 );
 	}
 
-	//	@Override
 	protected int getRowLeft() {
 		return this.xStart + 6;
 	}
@@ -216,8 +213,11 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 	@Override
 	public void close() {
 		for ( NativeImageBackedTexture tex : this.modIconsCache.values() ) {
-			tex.clearGlId();
+			if ( tex != null ) {
+				tex.clearGlId();
+			}
 		}
+		this.modIconsCache.clear();
 	}
 
 	public int getDisplayedCountFor( Set<String> set ) {
