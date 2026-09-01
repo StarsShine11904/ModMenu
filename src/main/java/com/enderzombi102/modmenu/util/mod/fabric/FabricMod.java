@@ -14,6 +14,7 @@ import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.api.metadata.ModEnvironment;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -128,7 +129,7 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull String getName() {
-		return metadata.getName();
+		return I18n.translate( metadata.getName() );
 	}
 
 	@Override
@@ -144,7 +145,7 @@ public class FabricMod implements Mod {
 				iconSourceId = ModMenu.MOD_ID;
 				iconPath = "assets/" + ModMenu.MOD_ID + "/icons/java.png";
 				break;
-			case "fabriclaoder":
+			case "fabricloader":
 				iconSourceId = ModMenu.MOD_ID;
 				iconPath = "assets/" + ModMenu.MOD_ID + "/icons/fabric.png";
 				break;
@@ -176,14 +177,19 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull String getDescription() {
+		String translationKey = "modmenu.descriptionTranslation." + getId();
+		if ( I18n.method_12500( translationKey ) ) {
+			return I18n.translate( translationKey );
+		}
+
 		String description = metadata.getDescription();
 		if ( description.isEmpty() ) {
 			if ( "minecraft".equals( getId() ) )
-				return "The base game.";
+				return I18n.translate( "modmenu.minecraft.description" );
 			else if ( "java".equals( getId() ) )
-				return "The Java runtime environment.";
+				return I18n.translate( "modmenu.java.description" );
 		}
-		return description;
+		return I18n.translate( description );
 	}
 
 	@Override
