@@ -4,9 +4,10 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
 	  "MixinTitleScreen",
-      "ButtonWidgetMixin",
-      "ScreenMixin",
-      "TextRendererAccessor"
+    "MixinGameMenuScreen",
+    "ButtonWidgetMixin",
+    "ScreenMixin",
+    "TextRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
