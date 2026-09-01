@@ -3,7 +3,7 @@
   "package": "com.enderzombi102.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-	  "MixinTitleScreen",
+    "MixinTitleScreen",
     "MixinGameMenuScreen",
     "ButtonWidgetMixin",
     "ScreenMixin",
