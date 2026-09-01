@@ -4,7 +4,7 @@ import com.enderzombi102.modmenu.ModMenu;
 import com.enderzombi102.modmenu.api.Mod;
 import com.enderzombi102.modmenu.util.BuiltinBadges;
 import com.enderzombi102.modmenu.gui.ModsScreen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.resource.language.I18n;
 
 import java.util.List;
 import java.util.Locale;
@@ -30,26 +30,27 @@ public class ModSearch {
 		String modDescription = mod.getDescription();
 		String modSummary = mod.getSummary();
 
-		String library = new TranslatableText( "modmenu.searchTerms.library" ).toString();
-		String deprecated = new TranslatableText( "modmenu.searchTerms.deprecated" ).toString();
-		String clientside = new TranslatableText( "modmenu.searchTerms.clientside" ).toString();
-		String configurable = new TranslatableText( "modmenu.searchTerms.configurable" ).toString();
+		// 使用 I18n.translate 取得當前語言設定下的搜尋關鍵詞
+		String library = I18n.translate( "modmenu.searchTerms.library" ).toLowerCase( Locale.ROOT );
+		String deprecated = I18n.translate( "modmenu.searchTerms.deprecated" ).toLowerCase( Locale.ROOT );
+		String clientside = I18n.translate( "modmenu.searchTerms.clientside" ).toLowerCase( Locale.ROOT );
+		String configurable = I18n.translate( "modmenu.searchTerms.configurable" ).toLowerCase( Locale.ROOT );
 
-		// Some basic search, could do with something more advanced but this will do for now
+		// 比對模組名稱、ID、描述、作者及各項徽章標籤
 		if (
-			mod.getName().toLowerCase( Locale.ROOT ).contains( query ) // Search mod name
-				|| modId.toLowerCase( Locale.ROOT ).contains( query ) // Search mod ID
-				|| modDescription.toLowerCase( Locale.ROOT ).contains( query ) // Search mod description
-				|| modSummary.toLowerCase( Locale.ROOT ).contains( query ) // Search mod summary
-				|| authorMatches( mod, query ) // Search via author
-				|| library.contains( query ) && mod.getBadges().contains( BuiltinBadges.LIBRARY ) // Search for lib mods
-				|| deprecated.contains( query ) && mod.getBadges().contains( BuiltinBadges.DEPRECATED ) // Search for deprecated mods
-				|| clientside.contains( query ) && mod.getBadges().contains( BuiltinBadges.CLIENT ) // Search for clientside mods
-				|| configurable.contains( query ) && screen.getModHasConfigScreen().get( modId ) // Search for mods that can be configured
+			mod.getName().toLowerCase( Locale.ROOT ).contains( query )
+				|| modId.toLowerCase( Locale.ROOT ).contains( query )
+				|| modDescription.toLowerCase( Locale.ROOT ).contains( query )
+				|| modSummary.toLowerCase( Locale.ROOT ).contains( query )
+				|| authorMatches( mod, query )
+				|| ( library.contains( query ) && mod.getBadges().contains( BuiltinBadges.LIBRARY ) )
+				|| ( deprecated.contains( query ) && mod.getBadges().contains( BuiltinBadges.DEPRECATED ) )
+				|| ( clientside.contains( query ) && mod.getBadges().contains( BuiltinBadges.CLIENT ) )
+				|| ( configurable.contains( query ) && Boolean.TRUE.equals( screen.getModHasConfigScreen().get( modId ) ) )
 		) return true;
 
-		// Allow parent to pass filter if a child passes
-		if ( ModMenu.PARENT_MAP.keySet().contains( mod ) ) {
+		// 若子模組符合條件，父模組也顯示
+		if ( ModMenu.PARENT_MAP.containsKey( mod ) ) {
 			for ( Mod child : ModMenu.PARENT_MAP.get( mod ) ) {
 				if ( passesFilters( screen, child, query ) )
 					return true;
@@ -63,5 +64,4 @@ public class ModSearch {
 			.map( s -> s.toLowerCase( Locale.ROOT ) )
 			.anyMatch( s -> s.contains( query.toLowerCase( Locale.ROOT ) ) );
 	}
-
 }
